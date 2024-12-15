@@ -2,42 +2,30 @@
 FROM --platform=$BUILDPLATFORM henrygd/beszel-agent AS base
 
 # Add GPU-specific container base and copy over the agent
-FROM --platform=$BUILDPLATFORM nvidia/cuda:12.6.3-base-ubuntu24.04
+# FROM --platform=$BUILDPLATFORM nvidia/cuda:12.6.3-base-ubuntu24.04
+FROM --platform=$BUILDPLATFORM rocm/dev-ubuntu-24.04:6.3
 
-# # RUN apt install "linux-headers-generic" "linux-modules-extra-generic"
+## https://gitlab.com/nvidia/container-images/cuda/-/blob/master/dist/12.6.3/ubuntu2404/base/Dockerfile?ref_type=heads
 
-RUN groupadd -g 109 render
-RUN apt update && apt install -y wget
-# RUN usermod -a -G render,video $LOGNAME # Add the current user to the render and video groups
-RUN wget https://repo.radeon.com/amdgpu-install/6.3/ubuntu/noble/amdgpu-install_6.3.60300-1_all.deb
-RUN apt install -y ./amdgpu-install_6.3.60300-1_all.deb
-RUN apt update
-RUN apt install -y rocm
-RUN rm -f ./amdgpu-install_6.3.60300-1_all.deb
+ENV NVARCH x86_64
 
-# Register the ROCM package repository, and install rocm-dev package
-# https://github.com/ROCm/ROCm-docker/blob/master/dev/Dockerfile-ubuntu-24.04
-# ARG ROCM_VERSION=6.2
-# ARG AMDGPU_VERSION=6.2
+ENV NVIDIA_REQUIRE_CUDA "cuda>=12.6 brand=unknown,driver>=470,driver<471 brand=grid,driver>=470,driver<471 brand=tesla,driver>=470,driver<471 brand=nvidia,driver>=470,driver<471 brand=quadro,driver>=470,driver<471 brand=quadrortx,driver>=470,driver<471 brand=nvidiartx,driver>=470,driver<471 brand=vapps,driver>=470,driver<471 brand=vpc,driver>=470,driver<471 brand=vcs,driver>=470,driver<471 brand=vws,driver>=470,driver<471 brand=cloudgaming,driver>=470,driver<471 brand=unknown,driver>=535,driver<536 brand=grid,driver>=535,driver<536 brand=tesla,driver>=535,driver<536 brand=nvidia,driver>=535,driver<536 brand=quadro,driver>=535,driver<536 brand=quadrortx,driver>=535,driver<536 brand=nvidiartx,driver>=535,driver<536 brand=vapps,driver>=535,driver<536 brand=vpc,driver>=535,driver<536 brand=vcs,driver>=535,driver<536 brand=vws,driver>=535,driver<536 brand=cloudgaming,driver>=535,driver<536 brand=unknown,driver>=550,driver<551 brand=grid,driver>=550,driver<551 brand=tesla,driver>=550,driver<551 brand=nvidia,driver>=550,driver<551 brand=quadro,driver>=550,driver<551 brand=quadrortx,driver>=550,driver<551 brand=nvidiartx,driver>=550,driver<551 brand=vapps,driver>=550,driver<551 brand=vpc,driver>=550,driver<551 brand=vcs,driver>=550,driver<551 brand=vws,driver>=550,driver<551 brand=cloudgaming,driver>=550,driver<551"
+ENV NV_CUDA_CUDART_VERSION 12.6.77-1
 
-# ARG APT_PREF
-# RUN echo "$APT_PREF" > /etc/apt/preferences.d/rocm-pin-600
-# RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends ca-certificates curl libnuma-dev gnupg
-# RUN curl -sL https://repo.radeon.com/rocm/rocm.gpg.key | apt-key add -
-# RUN printf "deb [arch=amd64] https://repo.radeon.com/rocm/apt/$ROCM_VERSION/ noble main" | tee /etc/apt/sources.list.d/rocm.list
-# RUN printf "deb [arch=amd64] https://repo.radeon.com/amdgpu/$AMDGPU_VERSION/ubuntu noble main" | tee /etc/apt/sources.list.d/amdgpu.list
-# RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-#   sudo \
-#   libelf1 \
-#   kmod \
-#   file \
-#   python3-dev \
-#   python3-pip \
-#   rocm-dev \
-#   build-essential && \
-#   apt-get clean && \
-#   rm -rf /var/lib/apt/lists/*
+# Required for nvidia-docker v1
+RUN echo "/usr/local/nvidia/lib" >> /etc/ld.so.conf.d/nvidia.conf \
+    && echo "/usr/local/nvidia/lib64" >> /etc/ld.so.conf.d/nvidia.conf
 
+ENV PATH /usr/local/nvidia/bin:/usr/local/cuda/bin:${PATH}
+ENV LD_LIBRARY_PATH /usr/local/nvidia/lib:/usr/local/nvidia/lib64
+
+COPY NGC-DL-CONTAINER-LICENSE /
+
+# nvidia-container-runtime
+ENV NVIDIA_VISIBLE_DEVICES all
+ENV NVIDIA_DRIVER_CAPABILITIES compute,utility
+
+## END OF COPIED SECTION
 
 COPY --from=base /agent /agent
 
