@@ -2,6 +2,8 @@ name: Build NVIDIA Docker Image
 
 on:
   workflow_dispatch:
+  schedule:
+    - cron: "0 0 * * *"
   push:
     paths:
         gpus/nvidia/**
