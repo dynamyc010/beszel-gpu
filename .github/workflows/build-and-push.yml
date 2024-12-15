@@ -16,9 +16,9 @@ jobs:
           - name: nvidia
             platforms: linux/amd64,linux/arm64
           - name: amd
-            platforms: linux/amd64,linux/arm64
+            platforms: linux/amd64
           - name: amd_nvidia
-            platform: linux/amd64,linux/arm64
+            platform: linux/amd64
     permissions:
       contents: read
       packages: write
