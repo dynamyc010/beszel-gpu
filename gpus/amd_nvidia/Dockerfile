@@ -7,11 +7,12 @@ FROM --platform=$BUILDPLATFORM nvidia/cuda:12.6.3-base-ubuntu24.04
 # # RUN apt install "linux-headers-generic" "linux-modules-extra-generic"
 
 RUN groupadd -g 109 render
+RUN apt update && apt install wget
 # RUN usermod -a -G render,video $LOGNAME # Add the current user to the render and video groups
 RUN wget https://repo.radeon.com/amdgpu-install/6.3/ubuntu/noble/amdgpu-install_6.3.60300-1_all.deb
 RUN apt install ./amdgpu-install_6.3.60300-1_all.deb
 RUN apt update
-RUN apt install amdgpu-dkms rocm
+RUN apt install rocm
 RUN rm -f ./amdgpu-install_6.3.60300-1_all.deb
 
 # Register the ROCM package repository, and install rocm-dev package
