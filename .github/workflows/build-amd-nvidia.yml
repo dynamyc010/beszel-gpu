@@ -13,8 +13,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - name: combined
-            platform: linux/amd64
+          - name: amd_nvidia
+            platforms: linux/amd64
     permissions:
       contents: read
       packages: write
