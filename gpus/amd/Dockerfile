@@ -2,7 +2,7 @@
 FROM --platform=$BUILDPLATFORM henrygd/beszel-agent AS base
 
 # Add GPU-specific container base and copy over the agent
-FROM --platform=$BUILDPLATFORM rocm/dev-almalinux-8
+FROM --platform=$BUILDPLATFORM rocm/dev-almalinux-8:6.3-complete
 
 COPY --from=base /agent /agent
 
