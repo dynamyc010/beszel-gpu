@@ -3,7 +3,7 @@ FROM --platform=$BUILDPLATFORM henrygd/beszel-agent AS base
 
 # Add GPU-specific container base and copy over the agent
 # FROM --platform=$BUILDPLATFORM nvidia/cuda:12.6.3-base-ubuntu24.04
-FROM --platform=$BUILDPLATFORM rocm/dev-ubuntu-24.04:6.3
+FROM --platform=$BUILDPLATFORM rocm/dev-ubuntu-24.04:6.3.3
 
 ## https://gitlab.com/nvidia/container-images/cuda/-/blob/master/dist/12.6.3/ubuntu2404/base/Dockerfile?ref_type=heads
 
