@@ -1,12 +1,12 @@
-name: Build Combined Docker Image
+name: Build AMD Docker Image
 
 on:
   workflow_dispatch:
-  # schedule:
-  #   - cron: "0 0 * * 5"
+  schedule:
+    - cron: "0 0 * * 5"
   push:
     paths:
-        gpus/amd_nvidia/**
+        - gpus/amd/**
 
 jobs:
   build:
@@ -15,7 +15,7 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - name: amd_nvidia
+          - name: amd
             platforms: linux/amd64
     permissions:
       contents: read
@@ -64,3 +64,4 @@ jobs:
             ghcr.io/dynamyc010/beszel-agent-gpus:${{ matrix.name }}-${{ github.sha }}
             ${{ steps.metadata.outputs.tags }}
           labels: ${{ steps.metadata.outputs.labels }}
+

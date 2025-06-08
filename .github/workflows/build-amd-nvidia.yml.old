@@ -1,12 +1,14 @@
-name: Build NVIDIA Docker Image
+name: Build Docker Images
 
 on:
   workflow_dispatch:
-  # schedule:
-  #   - cron: "0 0 * * 5"
+  schedule:
+    - cron: "0 0 * * 5"
   push:
     paths:
-        gpus/nvidia/**
+        - gpus/amd_nvidia/**
+        - gpus/nvidia/**
+        - gpus/amd/**
 
 jobs:
   build:
@@ -15,8 +17,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - name: nvidia
-            platforms: linux/amd64,linux/arm64
+          - name: amd_nvidia
+            platforms: linux/amd64
     permissions:
       contents: read
       packages: write
