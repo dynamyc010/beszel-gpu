@@ -1,4 +1,4 @@
-name: Build AMD Docker Image
+name: Build 
 
 on:
   workflow_dispatch:
@@ -6,7 +6,9 @@ on:
     - cron: "0 0 * * 5"
   push:
     paths:
-      - gpus/amd/**
+        - gpus/amd_nvidia/**
+        - gpus/nvidia/**
+        - gpus/amd/**
 
 jobs:
   build:
