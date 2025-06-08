@@ -2,8 +2,8 @@ name: Build Combined Docker Image
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: "0 0 * * 5"
+  # schedule:
+  #   - cron: "0 0 * * 5"
   push:
     paths:
         gpus/amd_nvidia/**
