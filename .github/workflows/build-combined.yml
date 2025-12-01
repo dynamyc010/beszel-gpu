@@ -70,6 +70,7 @@ jobs:
             ghcr.io/dynamyc010/beszel-agent-gpus:${{ matrix.name }}-${{ github.sha }}
             ${{ steps.metadata.outputs.tags }}
           labels: ${{ steps.metadata.outputs.labels }}
+          provenance: false
   cleanup:
     runs-on: ubuntu-latest
     needs: build
